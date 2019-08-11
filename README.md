@@ -9,7 +9,7 @@ To do this I had to make some changes to the comupte shader simulating the parti
 ## Results
 
 ### Glow Mode
-![Screenshot](https://raw.github.com/CalebKierum/ParticleLab/master/Glow.png) 
+![Screenshot](https://raw.github.com/CalebKierum/ParticleLab/blob/master/Glow.png) 
 
 Glow mode is achieved through my <blur composition> method allowing you to composite a complex blur over your scene.
 
