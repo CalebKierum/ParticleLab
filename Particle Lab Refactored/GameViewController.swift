@@ -79,8 +79,6 @@ class GameViewController: UIViewController {
     
     //The metal holds device the renderer and a MTK View
     func initializeSimulationandMetal() {
-        
-        Data.getId()
         //Grab a metal kit view which handles renderables and other cool things
         if let tempView = view as? MTKView {
             mtkView = tempView
