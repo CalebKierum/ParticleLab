@@ -19,6 +19,6 @@ Glow mode is achieved through my <blur composition> method allowing you to compo
 
 This effect is achieved by consistently blurring the image then using a min filter to pull in darker colors creating the effect of wisps.
 
-Video of it in action
+### Video of it in action
 
 [![](http://img.youtube.com/vi/gOqDZfU0EmU/0.jpg)](http://www.youtube.com/watch?v=gOqDZfU0EmU "Play Here")
