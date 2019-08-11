@@ -9,15 +9,13 @@ To do this I had to make some changes to the comupte shader simulating the parti
 ## Results
 
 ### Glow Mode
-![Screenshot](https://imgur.com/z5sQmjm) 
+![Screenshot](https://i.imgur.com/z5sQmjm.png) 
 
 Glow mode is achieved through my <blur composition> method allowing you to composite a complex blur over your scene.
 
 ### Cloud Mode
 
- ![Screenshot](https://imgur.com/dXTb7CQ) 
- [Imgur](https://imgur.com/dXTb7CQ)
-  [Screenshot](Cloud.png) 
+ ![Screenshot](https://i.imgur.com/dXTb7CQ.png) 
 
 This effect is achieved by consistently blurring the image then using a min filter to pull in darker colors creating the effect of wisps.
 
