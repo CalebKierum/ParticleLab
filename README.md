@@ -1,81 +1,24 @@
-# ParticleLab - High Performance Particles in Swift and Metal
-Particle system that's both calculated and rendered on the GPU using the Metal framework
+# Particle Lab Refactored
 
-![http://flexmonkey.co.uk/swift/IMG_0699.PNG](http://flexmonkey.co.uk/swift/IMG_0699.PNG)
+Awhile back FlexMonkey developed a particle system that could simulate a few million particles for a multi-touhch display at 40fps. However this original version has not been updated to more modern versions of metal. Additionally the original version had synchronization issues that caused flickering and other artifacts.
 
-This is the most highly optimised version of my Swift and Metal particles system; managing over 40 fps with four million particles and four gravity wells. It manages this by rendering to a MetalKit MTKView rather than converting a texture to a UIImage and by passing in four particle definitions per step with a float4x4 rather than a particle struct.
+I have refactored and revamped the original version adding in my own version of "Glow" mode, fixing synchronization issues, and ultimately making many sections run faster. I have also caused particles that are large distances out to respawn. Force touch also now changes the strength of the gravity wells.
 
-You can read about these recent changes at my blog:
+To do this I had to make some changes to the comupte shader simulating the particles, large changes to the core engine and data structures, and of course added in some additional post processing logic.
 
-* A First Look at Metal for OS X: http://flexmonkey.blogspot.co.uk/2015/06/a-first-look-at-metal-for-os-x-el.html
-* CAMetalLayer work: http://flexmonkey.blogspot.co.uk/2015/03/swift-metal-four-million-particles-on.html
-* Use of float4x4: http://flexmonkey.blogspot.co.uk/2015/03/mind-blowing-metal-four-million.html
+## Results
 
-This branch wraps up all the Metal code into one class so that it's easily implemented in other projects. To create a new particle system object, instantiate an instance of _ParticleLab_ specifying the dimensions and total number of particles (half, one, two or four million):
+### Glow Mode
+![Screenshot](Glow.png) 
 
-```
-particleLab = ParticleLab(width: 1024, height: 768, numParticles: ParticleCount.TwoMillion)
-```
+Glow mode is achieved through my <blur composition> method allowing you to composite a complex blur over your scene.
 
-...and when ready, add it  as a sublayer to your view:
+### Cloud Mode
 
-```
-view.addView(particleLab)
-```
+ ![Screenshot](Cloud.png) 
 
-The class has four gravity wells with propeties such as position, mass and spin. These are set with the _setGravityWellProperties_ method:
+This effect is achieved by consistently blurring the image then using a min filter to pull in darker colors creating the effect of wisps.
 
-```
-particleLab.setGravityWellProperties(gravityWell: .One, normalisedPositionX: 0.3, normalisedPositionY: 0.3, mass: 11, spin: -4)
-        
-particleLab.setGravityWellProperties(gravityWell: .Two, normalisedPositionX: 0.7, normalisedPositionY: 0.3, mass: 7, spin: 3)
-        
-particleLab.setGravityWellProperties(gravityWell: .Three, normalisedPositionX: 0.3, normalisedPositionY: 0.7, mass: 7, spin: 3)
-        
-particleLab.setGravityWellProperties(gravityWell: .Four, normalisedPositionX: 0.7, normalisedPositionY: 0.7, mass: 11, spin: -4)
-```
+Video of it in action
 
-Classes can implement ```ParticleLabDelegate``` interface which includes ```particleLabDidUpdate```. This method is invoked with each particle step and can be used, for example, for updating the position of gravity wells.
-
-# ParticleLab Features in Detail
-
-## Setting Gravity Well Properties
-
-ParticleLab supports up to four gravity wells that have properties for position, mass and spin. These properties are set through the ```setGravityWellProperties()``` method that either accepts a ```GravityWell``` enum or an index (0 through 3):
-
-```
-particleLab.setGravityWellProperties(gravityWell: .One, normalisedPositionX: 0.3, normalisedPositionY: 0.3, mass: 11, spin: -4)
-
-particleLab.setGravityWellProperties(gravityWellIndex: 0, normalisedPositionX: 0.3, normalisedPositionY: 0.3, mass: 11, spin: -4)
-```
-
-Gravity wells can be cleared so that their mass and spin are set to zero and they have no effect on the particle field:
-
-```
-resetGravityWells()
-```
-
-ParticleLab can also return the normalised position of any gravity well:
-
-```
-getGravityWellNormalisedPosition(#gravityWell: GravityWell) -> (x: Float, y: Float)
-```
-
-The positions of each gravity well can be displayed by setting the value of ```showGravityWellPositions``` to true
-
-## Setting Particle Properties and Behaviours
-
-Particles are distributed across three classes which have slightly different masses. The ```particleColor``` property sets the base color and the other two particles colors use variations of it. For example, if ```particleColor``` is set to 0xFFAA00, the other two classes are colored 0x00FFAA and 0xAA00FF.
-
-The ```dragFactor``` property defines how paricles decelerate. A value of one implies no deceleratation while a value of zero stops particles immediately. Typical values are between 0.8 and 1.0.
-
-```respawnOutOfBoundsParticles``` respawns particles to the centre of the screen once they escape the bounds of the simulation. Respawned particles radiate outwards from the centre.
-
-The particle field can be reset by ```resetParticles()```. This accepts a Boolean argument indicating whether the particles should appear at the edges of the simulation (default, true) or throughout the entire simualtion (false).
-
-## ParticleLabDelegate
-
-The ```ParticleLabDelegate``` protocol contains two methods.
-
-* ```particleLabDidUpdate()``` is fired with each update
-* ```particleLabMetalUnavailable``` is invoked if the target device doesn't support Metal
+[![](http://img.youtube.com/vi/gOqDZfU0EmU/0.jpg)](http://www.youtube.com/watch?v=gOqDZfU0EmU "Play Here")
